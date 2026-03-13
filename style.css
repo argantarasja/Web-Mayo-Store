@@ -178,13 +178,35 @@ body {
   flex: 1;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
 }
+
 .hero-image img {
   width: 100%;
   max-width: 550px;
+  height: auto;
+  object-fit: contain;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  /* border-radius: 15px; */
 }
 
+@media (min-width: 1400px) {
+  .hero-image img {
+    max-width: 600px; 
+  }
+}
+
+@media (max-width: 992px) {
+  .hero-image {
+    justify-content: center; 
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .hero-image img {
+    max-width: 90%; 
+  }
+}
 .about {
   padding: 80px 5%;
   background: var(--white);
@@ -376,12 +398,14 @@ body {
 .product-wrapper {
   display: flex;
   gap: 20px;
-  width: max-content; /* Penting agar tidak terpotong */
+  width: max-content;
   will-change: transform;
+  user-select: none;
+  -webkit-user-drag: none;
 }
 
 .product-card {
-  flex: 0 0 250px; /* Lebar tetap agar perhitungan duplikasi akurat */
+  flex: 0 0 250px;
   background: var(--white);
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
@@ -389,7 +413,6 @@ body {
   border: 1px solid #eee;
 }
 
-/* Hilangkan transisi agar tidak patah-patah saat reset posisi */
 .product-wrapper.moving {
   transition: none;
 }
@@ -422,7 +445,7 @@ body {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: #25d366; /* Warna WA */
+  background: #25d366;
   color: white;
   text-decoration: none;
   padding: 10px;
@@ -437,19 +460,16 @@ body {
   transform: translateY(-2px);
 }
 
-/* --- Perbaikan Responsive Produk (Slider Mode) --- */
 @media (max-width: 1200px) {
-  /* Tetap menggunakan lebar fixed agar slider JS tidak patah */
   .product-card {
     flex: 0 0 250px;
   }
 }
 
 @media (max-width: 768px) {
-  /* Perkecil sedikit ukuran card agar pas di layar HP */
   .product-card {
     flex: 0 0 220px;
-    margin-right: 10px; /* Tambah jarak antar card */
+    margin-right: 10px;
   }
 
   .product-img {
@@ -471,7 +491,6 @@ body {
 }
 
 @media (max-width: 480px) {
-  /* Untuk HP kecil, pastikan card tidak terlalu lebar tapi tetap fixed */
   .product-card {
     flex: 0 0 200px;
   }
@@ -480,7 +499,6 @@ body {
     padding: 60px 3%;
   }
 }
-/* --- SECTION KONTAK --- */
 .contact {
   padding: 100px 5%;
   background-color: var(--bg-color);
@@ -527,7 +545,7 @@ body {
 .info-item .label {
   font-weight: 700;
   color: #1a1a1a;
-  min-width: 100px; /* Membuat kolom label rata kiri */
+  min-width: 100px; 
   flex-shrink: 0;
 }
 
@@ -576,7 +594,6 @@ body {
   border-top: 1px solid #eee;
 }
 
-/* Responsif untuk Tablet dan HP */
 @media (max-width: 992px) {
   .contact-container {
     grid-template-columns: 1fr;
@@ -587,10 +604,7 @@ body {
   }
 }
 
-/* Responsive Breakpoints */
-/* Update pada Media Query 992px */
 @media (max-width: 992px) {
-  /* Sembunyikan tombol spmb di mobile jika perlu, atau biarkan */
   .btn-spmb {
     display: none;
   }
@@ -599,26 +613,24 @@ body {
   }
 
   .nav-links {
-    /* Reset display dari none ke flex namun sembunyikan dengan clip */
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 100%; /* Tepat di bawah header */
+    top: 100%; 
     left: 0;
     width: 100%;
     background: rgba(238, 245, 255, 0.98);
     backdrop-filter: blur(10px);
     gap: 0;
     text-align: center;
-    max-height: 0; /* Untuk animasi scroll */
+    max-height: 0; 
     overflow: hidden;
     transition: max-height 0.4s ease-in-out;
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.05);
   }
 
-  /* Class tambahan saat menu aktif (dipanggil via JS) */
   .nav-links.active {
-    max-height: 500px; /* Ukuran cukup besar untuk menampung semua link */
+    max-height: 500px;
     padding-bottom: 20px;
   }
 
