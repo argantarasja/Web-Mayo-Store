@@ -24,6 +24,7 @@ window.onscroll = () => {
   });
 };
 
+// --- SLIDER PENGUMUMAN ---
 const wrapper = document.querySelector(".slider-wrapper");
 const slides = document.querySelectorAll(".slide");
 const dots = document.querySelectorAll(".dot");
@@ -98,75 +99,83 @@ function animation() {
 
 window.addEventListener("resize", updateSlider);
 
+// --- PERBAIKAN INFINITE AUTO SCROLL & DRAG PRODUK ---
 const pWrapper = document.getElementById("productWrapper");
-const pCards = document.querySelectorAll(".product-card");
-
-pWrapper.innerHTML += pWrapper.innerHTML;
+pWrapper.innerHTML += pWrapper.innerHTML; 
 
 let pCurrentPos = 0;
-let pSpeed = 1; // Kecepatan geser (pixel per frame)
-let isPaused = false;
-let startX, scrollLeft;
+let pSpeed = 0.8; 
+let isDraggingProduct = false;
+let pStartX, pScrollLeft;
 
-function animate() {
-  if (!isPaused) {
+function animateProducts() {
+  if (!isDraggingProduct) {
     pCurrentPos -= pSpeed;
 
     if (Math.abs(pCurrentPos) >= pWrapper.scrollWidth / 2) {
       pCurrentPos = 0;
     }
-
     pWrapper.style.transform = `translateX(${pCurrentPos}px)`;
   }
-  requestAnimationFrame(animate);
+  requestAnimationFrame(animateProducts);
 }
 
-animate();
+animateProducts();
 
-const startDragging = (e) => {
-  isPaused = true;
-  startX = (e.pageX || e.touches[0].pageX) - pWrapper.offsetLeft;
-  scrollLeft = pCurrentPos;
+const startDraggingProduct = (e) => {
+  isDraggingProduct = true;
+  pWrapper.style.transition = "none";
+  pStartX = (e.pageX || e.touches[0].pageX) - pWrapper.offsetLeft;
+  pScrollLeft = pCurrentPos;
   pWrapper.style.cursor = "grabbing";
 };
 
-const stopDragging = () => {
-  isPaused = false;
+const moveDraggingProduct = (e) => {
+  if (!isDraggingProduct) return;
+  
+  const x = (e.pageX || e.touches[0].pageX) - pWrapper.offsetLeft;
+  const walk = x - pStartX;
+  pCurrentPos = pScrollLeft + walk;
+
+  const halfWidth = pWrapper.scrollWidth / 2;
+  if (pCurrentPos > 0) {
+    pCurrentPos = -halfWidth;
+    pScrollLeft = pCurrentPos;
+    pStartX = x; 
+  } else if (Math.abs(pCurrentPos) >= halfWidth) {
+    pCurrentPos = 0;
+    pScrollLeft = pCurrentPos;
+    pStartX = x;
+  }
+
+  pWrapper.style.transform = `translateX(${pCurrentPos}px)`;
+};
+
+const stopDraggingProduct = () => {
+  isDraggingProduct = false;
   pWrapper.style.cursor = "grab";
 };
 
-const moveDragging = (e) => {
-  if (!isPaused) return;
-  e.preventDefault();
-  const x = (e.pageX || e.touches[0].pageX) - pWrapper.offsetLeft;
-  const walk = x - startX;
-  pCurrentPos = scrollLeft + walk;
-};
+pWrapper.addEventListener("mousedown", startDraggingProduct);
+pWrapper.addEventListener("touchstart", startDraggingProduct, { passive: true });
 
-pWrapper.addEventListener("mousedown", startDragging);
-pWrapper.addEventListener("touchstart", startDragging);
+window.addEventListener("mousemove", moveDraggingProduct);
+window.addEventListener("touchmove", moveDraggingProduct, { passive: false });
 
-window.addEventListener("mouseup", stopDragging);
-window.addEventListener("touchend", stopDragging);
+window.addEventListener("mouseup", stopDraggingProduct);
+window.addEventListener("touchend", stopDraggingProduct);
 
-pWrapper.addEventListener("mousemove", moveDragging);
-pWrapper.addEventListener("touchmove", moveDragging);
-
-// Pause saat hover (Optional, biar user enak pilih produk)
-pWrapper.addEventListener("mouseenter", () => (isPaused = true));
-pWrapper.addEventListener("mouseleave", () => (isPaused = false));
-
+// --- NAVIGASI PRODUK ---
 const productNavBtns = document.querySelectorAll(".prod-link");
 
 productNavBtns.forEach((btn) => {
   btn.addEventListener("click", function () {
     productNavBtns.forEach((nav) => nav.classList.remove("active"));
-
     this.classList.add("active");
-
   });
 });
 
+// --- MENU MOBILE ---
 const menuIcon = document.querySelector(".menu-icon");
 const navLinksContainer = document.querySelector(".nav-links");
 
@@ -189,6 +198,7 @@ links.forEach((link) => {
   });
 });
 
+// --- DARK MODE THEME ---
 const themeToggle = document.getElementById('theme-toggle');
 const currentTheme = localStorage.getItem('theme');
 
